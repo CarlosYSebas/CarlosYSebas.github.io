@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="fotos/icon.png" type="image/png">
+    <title>Minijuego</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Align at the bottom for the catcher */
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Prevent scrollbars from appearing */
+            position: relative;
+        }
+
+        .boyfriend {
+            width: 100px; /* Adjust width for the boyfriend's catcher */
+            height: 100px;
+            background-color: rgb(255, 255, 255); /* Placeholder color for the boyfriend */
+            background-image: url('fotos/boyfriend.png');
+            background-size: cover;
+            position: absolute;
+            bottom: 20px; /* Positioned at the bottom */
+            left: calc(50% - 50px); /* Centering the catcher */
+            border-radius: 10px; /* Optional rounded corners */
+        }
+
+        .heart {
+            width: 50px;
+            height: 50px;
+            background-image: url('fotos/heart.png');
+            background-size: cover; /* Makes the image cover the div */
+            position: absolute;
+            border-radius: 50%; /* Circular shape */
+            top: 0; /* Start at the top */
+        }
+
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            z-index: 10; /* Ensure the score is above hearts */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20; /* Overlay above other elements */
+        }
+
+        .start-display {
+            visibility: visible; /* Show at the start */
+        }
+
+        .end-display {
+            display: none; /* Hide by default */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <audio id="backgroundMusic" src="fotos/music.mp3" loop autoplay></audio>
+    <div class="boyfriend"></div>
+    <h1>Amor: <span id="score">0</span></h1>
+
+    <div class="overlay start-display" id="startDisplay">
+        <h2>Atrapa el amor que te doy!</h2>
+        <p>Usa el cursor para atrapar los corazones.</p>
+        <p>Haz clic para empezar</p>
+        <button id="startButton">Inicio</button>
+    </div>
+
+    <div class="overlay end-display" id="endDisplay">
+        <h2>Game Over!</h2>
+        <p>Tu puntaje es: <span id="finalScore">0</span></p>
+        <button id="restartButton">Reiniciar</button>
+    </div>
+
+    <script>
+        let score = 0;
+        const scoreDisplay = document.getElementById('score');
+        const boyfriend = document.querySelector('.boyfriend');
+        const startDisplay = document.getElementById('startDisplay');
+        const endDisplay = document.getElementById('endDisplay');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        let gameInterval;
+        let droppedHearts = 0; // Count of dropped hearts
+        const maxDroppedHearts = 3; // Game ends after 3 hearts are dropped
+
+        // Function to create and drop a heart
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+
+            // Position the heart randomly at the top
+            heart.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+
+            // Animate heart falling down
+            document.body.appendChild(heart);
+            let dropInterval = setInterval(() => {
+                let heartTop = parseInt(window.getComputedStyle(heart).getPropertyValue('top'));
+
+                // Move the heart down faster
+                heart.style.top = heartTop + 20 + 'px'; // Increased falling speed
+
+                // Check if heart is caught
+                if (heartTop > window.innerHeight - 120) { // Below the boyfriend catcher
+                    if (Math.abs(boyfriend.offsetLeft - parseInt(heart.style.left)) < 100) {
+                        score += 1; // Increment score
+                        scoreDisplay.textContent = score; // Update score display
+                    } else {
+                        droppedHearts++; // Increment dropped hearts count
+                    }
+                    heart.remove(); // Remove heart
+                    clearInterval(dropInterval); // Stop the falling
+                }
+                // Remove heart if it falls off the screen
+                if (heartTop > window.innerHeight) {
+                    heart.remove();
+                    clearInterval(dropInterval);
+                    droppedHearts++; // Increment dropped hearts count
+                }
+
+                // End the game if 3 hearts are dropped
+                if (droppedHearts >= maxDroppedHearts) {
+                    clearInterval(dropInterval);
+                    endGame(); // Call end game function
+                }
+            }, 100); // Falling speed interval
+        }
+
+        // Create multiple hearts every half second
+        function startGame() {
+            score = 0; // Reset score
+            droppedHearts = 0; // Reset dropped hearts count
+            scoreDisplay.textContent = score; // Update score display
+            startDisplay.style.visibility = 'hidden'; // Hide start display
+            endDisplay.style.display = 'none'; // Hide end display
+
+            const existingHearts = document.querySelectorAll('.heart');
+            existingHearts.forEach(heart => heart.remove());
+
+            backgroundMusic.play();
+
+            gameInterval = setInterval(() => {
+                createHeart(); // Create hearts frequently
+            }, 500); // Create heart every 0.5 seconds
+        }
+
+        // Function to end the game and display the score
+        // Function to end the game and display the score
+        function endGame() {
+            console.log('fin');
+            clearInterval(gameInterval); // Ensure hearts stop falling
+            finalScoreDisplay.textContent = score; // Update final score display
+            endDisplay.style.display = 'flex'; // Show end display
+            endDisplay.style.visibility = 'visible';
+
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0; // Reset music to the start
+        }
+
+
+        // Event listeners for buttons
+        document.getElementById('startButton').addEventListener('click', startGame);
+        document.getElementById('restartButton').addEventListener('click', () => {
+            // Restart the game
+            endDisplay.style.display = 'none'; // Hide end display
+            startDisplay.style.visibility = 'visible'; // Show start display
+            score = 0; // Reset score
+            droppedHearts = 0; // Reset dropped hearts count
+            scoreDisplay.textContent = score; // Update score display
+        });
+
+        // Move boyfriend with mouse
+        document.addEventListener('mousemove', (event) => {
+            const mouseX = event.clientX; // Get mouse position
+            // Center the boyfriend based on mouse position
+            boyfriend.style.left = Math.max(0, Math.min(window.innerWidth - 100, mouseX - 50)) + 'px'; // Centering
+        });
+    </script>
+</body>
+</html>

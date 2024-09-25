@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="fotos/icon.png" type="image/png">
+    <title>Sebas y Carlos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f0f3; /* Light pastel background */
+        }
+
+        h1, h2, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #d8a7b1; /* Soft muted pink */
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #fff;
+        }
+
+        /* Flexbox Layout for Carousel and Message */
+        .carousel-message-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 50px auto;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        .message-box {
+            width: 45%; /* Takes up the left half */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-box h2 {
+            color: #d8a7b1;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .message-box p {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            width: 45%; /* Takes up the right half */
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            padding: 16px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            user-select: none;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* 3x3 Grid Layout for Remaining Photos */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
+            grid-template-rows: repeat(3, 1fr); /* Creates 3 rows */
+            gap: 15px;
+            margin: 50px auto;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .grid-container img {
+            width: 100%; 
+            height: 300px; /* Set fixed height for all images */
+            object-fit: cover; /* Crops images to fit into square */
+            border-radius: 10px;
+        }
+
+        .text-block a {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 70px;
+            padding: 10px 20px;
+            background-color: #b76e79;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        .text-block a:hover {
+            background-color: #934a58;
+        }
+
+        /* Center the Surprise Button */
+        .text-block {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>¡Felices 4 meses guapo!</h1>
+    </div>
+
+    <!-- Carousel and Message Section -->
+    <div class="carousel-message-container">
+        <!-- Romantic Message Box -->
+        <div class="message-box">
+            <h2>Para el mejor novio del mundo</h2>
+            <p>
+                En estos 4 meses que hemos compartido, me he dado cuenta de lo increíble que es tenerte a mi lado. 
+                Estoy muy agradecido de haberte conocido y de que ames y me permitas amarte.
+                Cada día contigo es un regalo, y no puedo esperar para seguir ver lo que nos espera juntos. 
+                Gracias por ser mi apoyo, mi amigo, y mi amor. ¡Te amo muchísimo guapo!
+            </p>
+        </div>
+
+        <!-- Carousel Section -->
+        <div class="carousel-container">
+            <div class="carousel-slide active">
+                <img src="fotos/sebas1.jpg" alt="Foto 1">
+            </div>
+            <div class="carousel-slide">
+                <img src="fotos/sebas2.jpg" alt="Foto 2">
+            </div>
+            <div class="carousel-slide">
+                <img src="fotos/sebas3.jpg" alt="Foto 3">
+            </div>
+            <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a class="next" onclick="changeSlide(1)">&#10095;</a>
+        </div>
+    </div>
+
+    <!-- 3x3 Grid Section for Remaining Photos -->
+    <div class="grid-container">
+        <img src="fotos/sebas4.jpg" alt="Foto 4">
+        <img src="fotos/sebas5.jpg" alt="Foto 5">
+        <img src="fotos/sebas6.jpg" alt="Foto 6">
+        <img src="fotos/sebas7.jpg" alt="Foto 7">
+        <img src="fotos/sebas8.jpg" alt="Foto 8">
+        <img src="fotos/sebas9.jpg" alt="Foto 9">
+        <img src="fotos/sebas10.jpg" alt="Foto 10">
+        <img src="fotos/sebas11.jpg" alt="Foto 11">
+        <img src="fotos/sebas12.jpg" alt="Foto 12">
+    </div>
+
+    <!-- Surprise Button -->
+    <div class="text-block">
+        <a href="game.html">Clic aquí para una sorpresa</a>
+    </div>
+
+    <!-- JavaScript for Carousel -->
+    <script>
+        let slideIndex = 0;
+        showSlide(slideIndex);
+
+        function changeSlide(n) {
+            showSlide(slideIndex += n);
+        }
+
+        function showSlide(n) {
+            let slides = document.getElementsByClassName("carousel-slide");
+            if (n >= slides.length) { slideIndex = 0; }
+            if (n < 0) { slideIndex = slides.length - 1; }
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slides[slideIndex].style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
